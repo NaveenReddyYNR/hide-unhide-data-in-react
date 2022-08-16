@@ -1,0 +1,438 @@
+import React, { useState, Fragment } from 'react';
+import { Grid, Button, Container, TextField } from '@mui/material';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
+import { useForm } from 'react-hook-form';
+import * as yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import FormControl from '@mui/material/FormControl';
+import EditIcon from '@mui/icons-material/Edit';
+import Select from '@mui/material/Select';
+import { FormProvider, RHFTextField } from '../../components/hook-form';
+import SuccessAlert from '../../components/alert/SuccessAlert';
+
+const validationSchema = yup.object({
+  orderId: yup.string('Enter Order here').required('Order id required'),
+});
+
+export default function ChangeOrderDetails() {
+  const navigate = useNavigate();
+
+  const [marketType, setMarketType] = useState('');
+
+  const handleMarketType = (event) => {
+    setMarketType(event.target.value);
+  };
+  const [side1, setSide1] = useState('');
+
+  const [side, setSide] = useState('');
+  const [alertMsg, setAlertMsg] = useState('');
+  const [isSuccess, setSuccess] = useState(false);
+
+  const handleRevise = () => {
+    setAlertMsg('Successfully revised');
+    setSuccess(true);
+    console.log(reviseItems);
+  };
+
+  const handleSide1 = (event) => {
+    if (side1.orderId === '');
+    else {
+      setSide1(event.target.value);
+    }
+  };
+
+  const [dropDown, setDropDown] = useState(false);
+
+  const handleSide = (event) => {
+    setSide(event.target.value);
+  };
+
+  const [types, setTypes] = useState(true);
+
+  const handleTypes = () => {
+    setTypes(false);
+  };
+
+  const [Instrument, setInstrument] = useState('');
+  const handleInstrument = (event) => {
+    setInstrument(event.target.value);
+  };
+  const initialValues = {
+    orderId: '',
+  };
+
+  const methods = useForm({
+    mode: 'onChange',
+    resolver: yupResolver(validationSchema),
+    defaultValues: initialValues,
+  });
+  const { reset, handleSubmit } = methods;
+
+  const onSubmit = (data) => {
+    setDropDown((prev) => !prev);
+    console.log('onSubmit', data);
+    // reset();
+  };
+
+  const [limitPrice, setLimitPrice] = useState(true);
+
+  const handlelimitPrice = () => {
+    setLimitPrice(false);
+  };
+
+  const [baseQuantity, setBaseQuantity] = useState(true);
+  const handleBaseQuantity = () => {
+    setBaseQuantity(false);
+  };
+
+  const [instruments, setInstruments] = useState(true);
+  const handleInstruuments = () => {
+    setInstruments(false);
+  };
+
+  const [sides, setSides] = useState(true);
+  const handleSides = () => {
+    setSides(false);
+  };
+
+  const [quotesqty, setQuotesqty] = useState(true);
+  const handleQuotesqty = () => {
+    setQuotesqty(false);
+  };
+
+  const [userId, setUserId] = useState(true);
+  const handleUserId = () => {
+    setUserId(false);
+  };
+  const [quotes, setQuotes] = useState(true);
+  const handleQuotes = () => {
+    setQuotes(false);
+  };
+
+  const [status, setStatus] = useState(true);
+  const handleStatus = () => {
+    setStatus(false);
+  };
+
+  const [makerFee, setMakerFee] = useState(true);
+  const handleMakerFee = () => {
+    setMakerFee(false);
+  };
+  const [takerFee, setTakerFee] = useState(true);
+  const handleTakerFee = () => {
+    setTakerFee(false);
+  };
+  const [orderValidation, setOrderValidation] = useState(true);
+
+  const [reviseItems, setReviseItems] = useState({
+    orderId: '',
+    selectType: 'LIMIT',
+    selectSide: '',
+    selectInstrument: '',
+    baseQuantity: '',
+    limitPrice: '',
+    quoteQuantity: '',
+    userID: '',
+    quote: 'INR',
+    status: 'OPEN',
+    makerFee: '',
+    takerFee: '',
+  });
+
+  const renderContent = () => {
+    return (
+      <>
+        <Grid>
+          <span style={{ marginTop: '25px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <TextField
+              style={{ width: '100%', marginRight: '6%' }}
+              fullWidth
+              name="orderId"
+              label="Order ID"
+              onChange={(e) => setReviseItems({ ...reviseItems, orderId: e.target.value })}
+            />
+          </span>
+
+          <span style={{ marginTop: '25px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <FormControl fullWidth>
+              <InputLabel>Select Type</InputLabel>
+              <Select
+                value={reviseItems.selectType}
+                label="Select Type"
+                onClick={handleMarketType}
+                disabled={types}
+
+                // onChange={(e) => setReviseItems({ ...reviseItems, selectType: e.target.value })}
+              >
+                <MenuItem value={'LIMIT'}>LIMIT</MenuItem>
+                {/* <MenuItem value={'Market'}>Market</MenuItem> */}
+              </Select>
+            </FormControl>
+            <EditIcon
+              disabled="true"
+              style={{
+                marginLeft: '25px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: types ? 'gray' : 'green',
+              }}
+              onClick={handleTypes}
+            />
+          </span>
+          <span style={{ marginTop: '25px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <FormControl fullWidth>
+              <InputLabel>Select Side</InputLabel>
+              <Select
+                value={reviseItems.selectSide}
+                label="Select Side"
+                onClick={handleSide}
+                disabled={sides}
+                onChange={(e) => setReviseItems({ ...reviseItems, selectSide: e.target.value })}
+              >
+                <MenuItem value={'BUY'}>BUY</MenuItem>
+                <MenuItem value={'SELL'}>SELL</MenuItem>
+              </Select>
+            </FormControl>
+            <EditIcon
+              style={{
+                marginLeft: '25px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: sides ? 'gray' : 'green',
+              }}
+              onClick={handleSides}
+            />
+          </span>
+
+          <span style={{ marginTop: '25px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+            <FormControl fullWidth>
+              <InputLabel>Select Instrument</InputLabel>
+              <Select
+                value={reviseItems.selectInstrument}
+                label="Select Instrument"
+                onClick={handleInstrument}
+                disabled={instruments}
+                onChange={(e) => setReviseItems({ ...reviseItems, selectInstrument: e.target.value })}
+              >
+                <MenuItem value={'BTC/INR'}>BTC/INR</MenuItem>
+                <MenuItem value={'USDT/INR'}>USDT/INR</MenuItem>
+                <MenuItem value={'SHIB/INR'}>SHIB/INR</MenuItem>
+                <MenuItem value={'ETH/INR'}>ETH/INR</MenuItem>
+              </Select>
+            </FormControl>
+            <EditIcon
+              style={{
+                marginLeft: '25px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: instruments ? 'gray' : 'green',
+              }}
+              onClick={handleInstruuments}
+            />
+          </span>
+        </Grid>
+
+        <span style={{ marginTop: '25px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <TextField
+            fullWidth
+            name="baseQuantity"
+            label="Base Quantity"
+            disabled={baseQuantity}
+            onChange={(e) => setReviseItems({ ...reviseItems, baseQuantity: e.target.value })}
+          />
+          <EditIcon
+            style={{
+              marginLeft: '25px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: baseQuantity ? 'gray' : 'green',
+            }}
+            onClick={handleBaseQuantity}
+          />
+        </span>
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <TextField
+            fullWidth
+            style={{ marginTop: '25px', color: 'gray' }}
+            name="limitPrice"
+            label="Limit Price"
+            disabled={limitPrice}
+            onChange={(e) => setReviseItems({ ...reviseItems, limitPrice: e.target.value })}
+          />
+          <EditIcon
+            style={{
+              marginLeft: '25px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: limitPrice ? 'gray' : 'green',
+            }}
+            onClick={handlelimitPrice}
+          />
+        </span>
+
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <TextField
+            fullWidth
+            style={{ marginTop: '25px' }}
+            name="quoteQuantity"
+            label="Quote Quantity"
+            disabled={quotesqty}
+            onChange={(e) => setReviseItems({ ...reviseItems, quoteQuantity: e.target.value })}
+          />
+          <EditIcon
+            style={{
+              marginLeft: '25px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: quotesqty ? 'gray' : 'green',
+            }}
+            onClick={handleQuotesqty}
+          />
+        </span>
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <TextField
+            fullWidth
+            style={{ marginTop: '25px' }}
+            name="userID"
+            label="User ID"
+            disabled={userId}
+            onChange={(e) => setReviseItems({ ...reviseItems, userID: e.target.value })}
+          />
+          <EditIcon
+            style={{
+              marginLeft: '25px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: userId ? 'gray' : 'green',
+            }}
+            onClick={handleUserId}
+          />
+        </span>
+
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <TextField
+            fullWidth
+            style={{ marginTop: '25px', width: '100%', marginRight: '6%' }}
+            name="quote"
+            label="Quote"
+            required
+            disabled={quotes}
+            value={reviseItems.quote}
+            // onChange={(e) => setReviseItems({ ...reviseItems, quote: e.target.value })}
+          />
+        </span>
+
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <TextField
+            fullWidth
+            style={{ width: '100%', marginRight: '6%', marginTop: '25px' }}
+            name="status"
+            label="Status"
+            required
+            disabled={status}
+            value={reviseItems.status}
+          />
+        </span>
+
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <TextField
+            fullWidth
+            style={{ marginTop: '25px' }}
+            name="makerFee"
+            label="Maker Fee"
+            required
+            disabled={makerFee}
+            onChange={(e) => setReviseItems({ ...reviseItems, makerFee: e.target.value })}
+          />
+          <EditIcon
+            style={{
+              marginLeft: '25px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: makerFee ? 'gray' : 'green',
+            }}
+            onClick={handleMakerFee}
+          />
+        </span>
+
+        <span style={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+          <TextField
+            fullWidth
+            style={{ marginTop: '25px' }}
+            name="takerFee"
+            label="Taker Fee"
+            required
+            disabled={takerFee}
+            onChange={(e) => setReviseItems({ ...reviseItems, takerFee: e.target.value })}
+          />
+          <EditIcon
+            style={{
+              marginLeft: '25px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: takerFee ? 'gray' : 'green',
+            }}
+            onClick={handleTakerFee}
+          />
+        </span>
+
+        <span style={{ display: 'flex', justifyContent: 'end', marginTop: '25px' }}>
+          <Button variant="contained" onClick={handleRevise}>
+            Revise
+          </Button>
+        </span>
+        {<SuccessAlert isSuccess={isSuccess} setSuccess={setSuccess} alertMsg={alertMsg} />}
+      </>
+    );
+  };
+  return (
+    <>
+      <Button
+        variant="outlined"
+        style={{ marginBottom: '25px' }}
+        onClick={() => {
+          navigate(-1);
+        }}
+      >
+        <ChevronLeftIcon />
+        Back Page
+      </Button>
+      <Container maxWidth="md">
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <h3>Change order details</h3>
+          <Grid
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              textAlign: 'center',
+              flexWrap: 'inherit',
+              marginTop: '25px',
+            }}
+          >
+            <Grid container columnGap={5}>
+              <RHFTextField name="orderId" placeholder="Enter Order Id here" label="Order Id" />
+            </Grid>
+            <Grid>
+              <Button variant="contained" type="submit" style={{ marginLeft: '20%' }}>
+                Submit
+              </Button>
+            </Grid>
+          </Grid>
+          {dropDown && renderContent(false)}
+        </FormProvider>
+      </Container>
+    </>
+  );
+}
